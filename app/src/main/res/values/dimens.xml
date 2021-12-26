@@ -2,6 +2,12 @@
 <resources>
     <dimen name="margin_15_dp">15dp</dimen>
     <dimen name="margin_50_dp">50dp</dimen>
-    <dimen name="text_size_35_dp">35sp</dimen>
     <dimen name="margin_5_dp">5dp</dimen>
+    <dimen name="padding_10_dp">10dp</dimen>
+
+    <dimen name="text_size_35_sp">35sp</dimen>
+    <dimen name="text_size_25_sp">25sp</dimen>
+
+    <dimen name="max_icon_size">56dp</dimen>
+    <dimen name="line_height_1_dp">1dp</dimen>
 </resources>

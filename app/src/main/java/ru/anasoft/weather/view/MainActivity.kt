@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import ru.anasoft.weather.R
 import ru.anasoft.weather.databinding.ActivityMainBinding
+import ru.anasoft.weather.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         if(savedInstanceState == null){
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.container,MainFragment.newInstance())
+                .replace(R.id.container, MainFragment.newInstance())
                 .commit()
         }
     }

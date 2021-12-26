@@ -1,8 +1,13 @@
 package ru.anasoft.weather.model
 
-data class Weather(val city:City = getDefaultCity(), val temperature:Int=-18, val feels:Int=-19)
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-data class City(val name:String, val ln:Double, val lt:Double)
+@Parcelize
+data class Weather(val city:City = getDefaultCity(), val temperature:Int=-18, val feels:Int=-19):Parcelable
+
+@Parcelize
+data class City(val name:String, val ln:Double, val lt:Double):Parcelable
 
 fun getDefaultCity() = City("Москва",37.5,55.5)
 
