@@ -67,7 +67,7 @@ class MainFragment : Fragment() {
                     binding.mainFragment,
                     "Ошибка загрузки",
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Попробовать ещё раз") {
+                    .setAction("Повторить") {
                         viewModel.getWeather()
                     }.show()
             }
