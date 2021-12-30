@@ -93,22 +93,27 @@ class MainFragment : Fragment() {
                 }
                 is AppState.Error -> {
                     loadingLayout.visibility = View.GONE
-                    Snackbar.make(
-                        root,
-                        "Ошибка загрузки",
-                        Snackbar.LENGTH_INDEFINITE
-                        ).setAction("Повторить") {
-                            with(viewModel) {
-                                if (isRussian) {
-                                    getWeatherListFromLocalRus()
-                                } else {
-                                    getWeatherListFromLocalWorld()
-                                }
+                    root.showSnackBar("Ошибка загрузки", "Повторить",
+                        { with(viewModel) {
+                            if (isRussian) {
+                                getWeatherListFromLocalRus()
+                            } else {
+                                getWeatherListFromLocalWorld()
                             }
-                        }.show()
+                        } }
+                    )
                 }
             }
         }
+    }
+
+    private fun View.showSnackBar(
+        text: String,
+        actionText: String,
+        action: (View) -> Unit,
+        length: Int = Snackbar.LENGTH_INDEFINITE) {
+
+        Snackbar.make(this, text, length).setAction(actionText, action).show()
     }
 
     override fun onDestroy() {
