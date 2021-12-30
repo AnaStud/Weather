@@ -23,20 +23,20 @@ class MainFragment : Fragment() {
             return _binding!!
         }
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
 
     private var isRussian = true
 
     private val adapter = MainFragmentAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
-            val manager = activity?.supportFragmentManager
-            if (manager != null) {
-                val bundle = Bundle()
-                bundle.putParcelable(DetailsFragment.BUNDLE_EXTRA, weather)
-                manager.beginTransaction()
-                    .add(R.id.container, DetailsFragment.newInstance(bundle))
-                    .addToBackStack("")
-                    .commit()
+            activity?.supportFragmentManager?.apply {
+                beginTransaction()
+                .add(R.id.container, DetailsFragment.newInstance(Bundle().apply {
+                    putParcelable(DetailsFragment.BUNDLE_EXTRA, weather) }))
+                .addToBackStack("")
+                .commit()
             }
         }
     })
@@ -55,49 +55,58 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.mainFragmentRecyclerView.adapter = adapter
-        binding.mainFragmentButtonChangeLocation.setOnClickListener {
-            sendRequest()
+        with(binding) {
+            mainFragmentRecyclerView.adapter = adapter
+            mainFragmentButtonChangeLocation.setOnClickListener {
+                sendRequest()
+            }
         }
 
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
-        viewModel.getWeatherListFromLocalRus()
+        with(viewModel) {
+            getLiveData().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
+            getWeatherListFromLocalRus()
+        }
     }
 
     private fun sendRequest() {
-        if (isRussian) {
-            viewModel.getWeatherListFromLocalWorld()
-            binding.mainFragmentButtonChangeLocation.setImageResource(R.drawable.ic_russia)
-        } else {
-            viewModel.getWeatherListFromLocalRus()
-            binding.mainFragmentButtonChangeLocation.setImageResource(R.drawable.ic_earth)
+        with(binding) {
+            if (isRussian) {
+                viewModel.getWeatherListFromLocalWorld()
+                mainFragmentButtonChangeLocation.setImageResource(R.drawable.ic_russia)
+            } else {
+                viewModel.getWeatherListFromLocalRus()
+                mainFragmentButtonChangeLocation.setImageResource(R.drawable.ic_earth)
+            }
         }
         isRussian = !isRussian
     }
 
     private fun renderData(appState:AppState) {
-        when (appState) {
-            is AppState.Loading -> {
-                binding.loadingLayout.visibility = View.VISIBLE
-            }
-            is AppState.Success -> {
-                binding.loadingLayout.visibility = View.GONE
-                adapter.setWeather(appState.weatherData)
-            }
-            is AppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
+        with(binding) {
+            when (appState) {
+                is AppState.Loading -> {
+                    loadingLayout.visibility = View.VISIBLE
+                }
+                is AppState.Success -> {
+                    loadingLayout.visibility = View.GONE
+                    adapter.setWeather(appState.weatherData)
+                }
+                is AppState.Error -> {
+                    loadingLayout.visibility = View.GONE
                     Snackbar.make(
-                    binding.root,
-                    "Ошибка загрузки",
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Повторить") {
-                        if (isRussian) {
-                            viewModel.getWeatherListFromLocalRus()
-                        } else {
-                            viewModel.getWeatherListFromLocalWorld()
-                        }
-                    }.show()
+                        root,
+                        "Ошибка загрузки",
+                        Snackbar.LENGTH_INDEFINITE
+                        ).setAction("Повторить") {
+                            with(viewModel) {
+                                if (isRussian) {
+                                    getWeatherListFromLocalRus()
+                                } else {
+                                    getWeatherListFromLocalWorld()
+                                }
+                            }
+                        }.show()
+                }
             }
         }
     }
@@ -106,9 +115,7 @@ class MainFragment : Fragment() {
         super.onDestroy()
         _binding = null
         adapter.removeListener()
-        super.onDestroy()
     }
-
 
     interface OnItemViewClickListener {
         fun onItemViewClick(weather: Weather)
