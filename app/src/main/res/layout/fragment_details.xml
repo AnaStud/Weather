@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/city"
+            android:id="@+id/cityName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_50_dp"
@@ -34,7 +34,7 @@
             android:layout_marginTop="@dimen/margin_5_dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/city" >
+            app:layout_constraintTop_toBottomOf="@+id/cityName" >
 
             <TextView
                 android:id="@+id/coordinate_lt"
@@ -46,7 +46,7 @@
                 android:id="@+id/coordinate_ln"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_5_dp"
+                android:layout_marginStart="@dimen/margin_5_dp"
                 tools:text="Долгота: 55°58′04″ в.д." />
         </LinearLayout>
 

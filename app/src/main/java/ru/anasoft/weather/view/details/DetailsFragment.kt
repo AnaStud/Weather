@@ -27,27 +27,29 @@ class DetailsFragment : Fragment() {
         const val BUNDLE_EXTRA = "CITY_KEY"
 
         @JvmStatic
-        fun newInstance(bundle:Bundle):DetailsFragment {
-             val fragment  = DetailsFragment()
-            fragment.arguments = bundle
-            return fragment
+        fun newInstance(bundle:Bundle) = DetailsFragment().apply {
+            arguments = bundle
         }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val weather = arguments?.getParcelable<Weather>(BUNDLE_EXTRA)
-        if(weather != null){
-            setWeatherData(weather)
+        arguments?.getParcelable<Weather>(BUNDLE_EXTRA)?.let {
+            setWeatherData(it)
         }
     }
 
     private fun setWeatherData(weather: Weather) {
-        binding.city.text = weather.city.name
-        binding.coordinateLt.text = weather.city.lt.toString()
-        binding.coordinateLn.text = weather.city.ln.toString()
-        binding.temperature.text =  weather.temperature.toString()
-        binding.feels.text = weather.feels.toString()
+        with(binding) {
+            weather.city.also { city ->
+                cityName.text = city.name
+                coordinateLt.text = city.lt.toString()
+                coordinateLn.text = city.ln.toString()
+            }
+            temperature.text = weather.temperature.toString()
+            feels.text = weather.feels.toString()
+        }
     }
 
     override fun onDestroy() {
