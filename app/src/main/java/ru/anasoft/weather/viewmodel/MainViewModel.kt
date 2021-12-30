@@ -1,17 +1,17 @@
 package ru.anasoft.weather.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.anasoft.weather.model.RepositoryImpl
 import java.lang.Thread.sleep
 
-class MainViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData(),
-                    private val repositoryImpl: RepositoryImpl = RepositoryImpl()): ViewModel() {
+class MainViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData()): ViewModel() {
 
-    fun getLiveData():LiveData<AppState> {
-        return liveData
+    private val repositoryImpl: RepositoryImpl by lazy {
+        RepositoryImpl()
     }
+
+    fun getLiveData() = liveData
 
     fun getWeatherListFromLocalRus() = getDataFromLocal(isRussian = true)
 
@@ -24,11 +24,14 @@ class MainViewModel(private val liveData: MutableLiveData<AppState> = MutableLiv
         Thread {
             sleep(1000)
             liveData.postValue(AppState.Success(
-                if (isRussian) {
-                    repositoryImpl.getWeatherListFromLocalRus()
-                } else {
-                    repositoryImpl.getWeatherListFromLocalWorld()
-                }))
+                with(repositoryImpl) {
+                    if (isRussian) {
+                        getWeatherListFromLocalRus()
+                    } else {
+                        getWeatherListFromLocalWorld()
+                    }
+                }
+            ))
         }.start()
     }
 
