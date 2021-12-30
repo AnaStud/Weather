@@ -2,16 +2,10 @@ package ru.anasoft.weather.model
 
 class RepositoryImpl:Repository {
 
-    override fun getWeatherFromServer(): Weather {
-        return Weather()
-    }
+    override fun getWeatherFromServer() = Weather()
 
-    override fun getWeatherListFromLocalRus(): List<Weather> {
-        return getRussianCities()
-    }
+    override fun getWeatherListFromLocalRus() = getRussianCities()
 
-    override fun getWeatherListFromLocalWorld(): List<Weather> {
-        return getWorldCities()
-    }
+    override fun getWeatherListFromLocalWorld() = getWorldCities()
 
 }
