@@ -46,6 +46,7 @@ class DetailsFragment : Fragment() {
                 cityName.text = city.name
                 coordinateLt.text = city.lt.toString()
                 coordinateLn.text = city.ln.toString()
+                condition.text = "Облачно"
             }
             temperature.text = weather.temperature.toString()
             feels.text = weather.feels.toString()
