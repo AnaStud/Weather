@@ -1,11 +1,15 @@
 package ru.anasoft.weather.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 class WeatherDTO(
     val fact: FactDTO?
-    )
+    ): Parcelable
 
+@Parcelize
 data class FactDTO(
     val temp: Int?,
 
@@ -13,5 +17,5 @@ data class FactDTO(
     val feelsLike: Int?,
 
     val condition: String?
-    )
+    ): Parcelable
 
