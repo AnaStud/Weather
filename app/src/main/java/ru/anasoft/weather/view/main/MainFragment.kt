@@ -64,17 +64,17 @@ class MainFragment : Fragment() {
 
         with(viewModel) {
             getLiveData().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
-            getWeatherListFromLocalRus()
+            getListWeatherRus()
         }
     }
 
     private fun sendRequest() {
         with(binding) {
             if (isRussian) {
-                viewModel.getWeatherListFromLocalWorld()
+                viewModel.getListWeatherWorld()
                 mainFragmentButtonChangeLocation.setImageResource(R.drawable.ic_russia)
             } else {
-                viewModel.getWeatherListFromLocalRus()
+                viewModel.getListWeatherRus()
                 mainFragmentButtonChangeLocation.setImageResource(R.drawable.ic_earth)
             }
         }
@@ -87,7 +87,7 @@ class MainFragment : Fragment() {
                 is AppState.Loading -> {
                     loadingLayout.visibility = View.VISIBLE
                 }
-                is AppState.Success -> {
+                is AppState.SuccessListWeather -> {
                     loadingLayout.visibility = View.GONE
                     adapter.setWeather(appState.weatherData)
                 }
@@ -96,9 +96,9 @@ class MainFragment : Fragment() {
                     root.showSnackBar("Ошибка загрузки", "Повторить",
                         { with(viewModel) {
                             if (isRussian) {
-                                getWeatherListFromLocalRus()
+                                getListWeatherRus()
                             } else {
-                                getWeatherListFromLocalWorld()
+                                getListWeatherWorld()
                             }
                         } }
                     )

@@ -1,25 +1,20 @@
 package ru.anasoft.weather.view.details
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import ru.anasoft.weather.databinding.FragmentDetailsBinding
 import ru.anasoft.weather.model.Weather
 import ru.anasoft.weather.model.WeatherDTO
-
-const val WEATHER_DTO_KEY = "WEATHER DTO KEY"
-const val DETAILS_INTENT_FILTER = "DETAILS INTENT FILTER"
-const val DETAILS_REQUEST_ERROR = "REQUEST ERROR"
+import ru.anasoft.weather.viewmodel.AppState
+import ru.anasoft.weather.viewmodel.DetailsViewModel
 
 class DetailsFragment : Fragment() {
 
@@ -28,6 +23,10 @@ class DetailsFragment : Fragment() {
         get() {
             return _binding!!
         }
+
+    private val viewModel: DetailsViewModel by lazy {
+        ViewModelProvider(this).get(DetailsViewModel::class.java)
+    }
 
     private lateinit var weatherBundle: Weather
 
@@ -42,27 +41,6 @@ class DetailsFragment : Fragment() {
 
     }
 
-    private val loadResultsReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            intent?.let {
-                val weatherDTO = it.getParcelableExtra<WeatherDTO>(WEATHER_DTO_KEY)
-                if (weatherDTO != null) {
-                    displayWeather(weatherDTO)
-                } else {
-                    setWeatherData()
-                }
-                val throwableMessage = it.getStringExtra(DETAILS_REQUEST_ERROR)
-                if (throwableMessage != null) {
-                    Snackbar
-                        .make(binding.detailsFragment,
-                            "Ошибка загрузки с сервера: $throwableMessage",
-                            Snackbar.LENGTH_INDEFINITE)
-                        .show()
-                }
-            }
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
@@ -72,23 +50,36 @@ class DetailsFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        with(viewModel) {
+            getLiveData().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
+        }
         arguments?.getParcelable<Weather>(BUNDLE_EXTRA)?.let {
             weatherBundle = it
-            getWeather()
+            viewModel.getWeatherDTOFromServer(it.city.lt, it.city.ln)
         }
     }
 
-    private fun getWeather() {
-        binding.detailsFragment.visibility = View.GONE
-        binding.loadingLayout.visibility = View.VISIBLE
-        requireActivity().startService(
-            Intent(requireActivity(), DetailsService::class.java).apply {
-                putExtra(LT_KEY, weatherBundle.city.lt)
-                putExtra(LN_KEY, weatherBundle.city.ln)
+    private fun renderData(appState:AppState) {
+        with(binding) {
+            when (appState) {
+                is AppState.Loading -> {
+                    loadingLayout.visibility = View.VISIBLE
+                }
+                is AppState.SuccessWeatherDTO -> {
+                    loadingLayout.visibility = View.GONE
+                    displayWeather(appState.weatherDTO)
+                }
+                is AppState.Error -> {
+                    loadingLayout.visibility = View.GONE
+                    setWeatherData()
+                    Snackbar
+                        .make(root,
+                            "Ошибка загрузки: ${appState.error.message}",
+                            Snackbar.LENGTH_INDEFINITE)
+                        .show()
+                }
             }
-        )
-        LocalBroadcastManager.getInstance(requireActivity())
-            .registerReceiver(loadResultsReceiver, IntentFilter(DETAILS_INTENT_FILTER))
+        }
     }
 
     private fun displayWeather(weatherDTO: WeatherDTO) {
@@ -117,7 +108,7 @@ class DetailsFragment : Fragment() {
                 coordinateLn.text = city.ln.toString()
                 condition.text = "Облачно"
             }
-            temperature.text = weatherBundle.temperature.toString()
+            temperature.text = weatherBundle.temp.toString()
             feels.text = weatherBundle.feels.toString()
         }
     }
@@ -126,12 +117,4 @@ class DetailsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    override fun onDestroy() {
-        context?.let {
-            LocalBroadcastManager.getInstance(it).unregisterReceiver(loadResultsReceiver)
-        }
-        super.onDestroy()
-    }
-
 }
