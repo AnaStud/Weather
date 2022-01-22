@@ -10,4 +10,5 @@
 
     <dimen name="max_icon_size">56dp</dimen>
     <dimen name="line_height_1_dp">1dp</dimen>
+    <dimen name="icon_size">100dp</dimen>
 </resources>

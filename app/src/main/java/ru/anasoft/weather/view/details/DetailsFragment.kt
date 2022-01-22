@@ -5,14 +5,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.load
+import coil.request.ImageRequest
 import com.google.android.material.snackbar.Snackbar
 import ru.anasoft.weather.databinding.FragmentDetailsBinding
 import ru.anasoft.weather.model.Weather
 import ru.anasoft.weather.model.WeatherDTO
+import ru.anasoft.weather.utils.ICONS_PATH
+import ru.anasoft.weather.utils.ICONS_SERVER
+import ru.anasoft.weather.utils.IMAGE_HEADER
 import ru.anasoft.weather.viewmodel.AppState
 import ru.anasoft.weather.viewmodel.DetailsViewModel
 
@@ -83,19 +91,43 @@ class DetailsFragment : Fragment() {
     }
 
     private fun displayWeather(weatherDTO: WeatherDTO) {
-        with(binding) {
-            detailsFragment.visibility = View.VISIBLE
-            loadingLayout.visibility = View.GONE
-            weatherBundle.city.also { city ->
-                cityName.text = city.name
-                coordinateLt.text = city.lt.toString()
-                coordinateLn.text = city.ln.toString()
-
-            }
-            temperature.text = weatherDTO.fact?.temp.toString()
-            feels.text = weatherDTO.fact?.feelsLike.toString()
-            condition.text = weatherDTO.fact?.condition
+        if (weatherDTO.fact == null) {
+            setWeatherData()
         }
+        else {
+            with(binding) {
+                detailsFragment.visibility = View.VISIBLE
+                loadingLayout.visibility = View.GONE
+
+                headerIcon.load(IMAGE_HEADER)
+                weatherBundle.city.also { city ->
+                    cityName.text = city.name
+                    coordinateLt.text = city.lt.toString()
+                    coordinateLn.text = city.ln.toString()
+
+                }
+                weatherDTO.fact.also {
+                    weatherIcon.loadUrl("$ICONS_SERVER$ICONS_PATH/${it.icon}.svg")
+                    condition.text = it.condition
+                    temperature.text = it.temp.toString()
+                    feels.text = it.feelsLike.toString()
+                }
+            }
+        }
+    }
+
+    private fun ImageView.loadUrl(url: String) {
+
+        val imageLoader = ImageLoader.Builder(this.context)
+            .componentRegistry { add(SvgDecoder(this@loadUrl.context)) }
+            .build()
+
+        val request = ImageRequest.Builder(this.context)
+            .data(url)
+            .target(this)
+            .build()
+
+        imageLoader.enqueue(request)
     }
 
     private fun setWeatherData() {
