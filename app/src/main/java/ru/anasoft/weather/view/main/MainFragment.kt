@@ -1,10 +1,10 @@
 package ru.anasoft.weather.view.main
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
@@ -12,6 +12,7 @@ import ru.anasoft.weather.R
 import ru.anasoft.weather.databinding.FragmentMainBinding
 import ru.anasoft.weather.model.Weather
 import ru.anasoft.weather.view.details.DetailsFragment
+import ru.anasoft.weather.view.isRussianSavedPreference
 import ru.anasoft.weather.viewmodel.AppState
 import ru.anasoft.weather.viewmodel.MainViewModel
 
@@ -27,7 +28,7 @@ class MainFragment : Fragment() {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
-    private var isRussian = true
+    private var isRussian = isRussianSavedPreference
 
     private val adapter = MainFragmentAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
@@ -64,7 +65,13 @@ class MainFragment : Fragment() {
 
         with(viewModel) {
             getLiveData().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
-            getListWeatherRus()
+            if (isRussian) {
+                getListWeatherRus()
+            }
+            else {
+                getListWeatherWorld()
+            }
+
         }
     }
 
@@ -79,6 +86,7 @@ class MainFragment : Fragment() {
             }
         }
         isRussian = !isRussian
+        isRussianSavedPreference = isRussian
     }
 
     private fun renderData(appState:AppState) {
