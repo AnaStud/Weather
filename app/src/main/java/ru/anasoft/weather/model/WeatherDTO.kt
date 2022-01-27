@@ -17,6 +17,6 @@ data class FactDTO(
     val feelsLike: Int?,
 
     val condition: String?,
-    val icon: String
+    val icon: String?
 ): Parcelable
 

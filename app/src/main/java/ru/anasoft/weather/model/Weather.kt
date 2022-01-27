@@ -1,10 +1,19 @@
 package ru.anasoft.weather.model
 
 import android.os.Parcelable
+import android.service.notification.Condition
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Weather(val city:City = getDefaultCity(), val temp:Int=-18, val feels:Int=-19):Parcelable
+data class Weather(val city:City = getDefaultCity(), val temp:Int=-18, val feelsLike:Int=-19):Parcelable
+
+@Parcelize
+data class WeatherHistory(val city: City = getDefaultCity(),
+                          val dateTime: String = "",
+                          val temp: Int = 0,
+                          val feelsLike: Int = 0,
+                          val condition: String = "",
+                          val icon: String = ""):Parcelable
 
 @Parcelize
 data class City(val name:String, val lt:Double, val ln:Double):Parcelable

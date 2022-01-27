@@ -141,7 +141,7 @@ class DetailsFragment : Fragment() {
                 condition.text = "Облачно"
             }
             temperature.text = weatherBundle.temp.toString()
-            feels.text = weatherBundle.feels.toString()
+            feels.text = weatherBundle.feelsLike.toString()
         }
     }
 
