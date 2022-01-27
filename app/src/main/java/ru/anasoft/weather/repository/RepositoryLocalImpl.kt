@@ -6,7 +6,6 @@ import ru.anasoft.weather.model.City
 import ru.anasoft.weather.model.Weather
 import ru.anasoft.weather.model.WeatherDTO
 import ru.anasoft.weather.model.WeatherHistory
-import ru.anasoft.weather.room.HistoryDao
 import ru.anasoft.weather.room.HistoryEntity
 import java.text.SimpleDateFormat
 import java.util.*
