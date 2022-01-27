@@ -4,4 +4,5 @@
     <string name="temperature_name">Температура</string>
     <string name="feels_name">Ощущается</string>
     <string name="location">Location</string>
+    <string name="history">History</string>
 </resources>
