@@ -2,13 +2,13 @@ package ru.anasoft.weather.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.anasoft.weather.repository.RepositoriesImpl
+import ru.anasoft.weather.repository.RepositoryRemoteImpl
 import java.lang.Thread.sleep
 
 class MainViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData()): ViewModel() {
 
-    private val repositoryImpl: RepositoriesImpl by lazy {
-        RepositoriesImpl()
+    private val repositoryImpl: RepositoryRemoteImpl by lazy {
+        RepositoryRemoteImpl()
     }
 
     fun getLiveData() = liveData

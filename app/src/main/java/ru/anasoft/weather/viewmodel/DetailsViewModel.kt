@@ -5,19 +5,25 @@ import androidx.lifecycle.ViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import ru.anasoft.weather.model.Weather
 import ru.anasoft.weather.model.WeatherDTO
-import ru.anasoft.weather.repository.RepositoriesImpl
+import ru.anasoft.weather.repository.RepositoryRemoteImpl
+import ru.anasoft.weather.repository.RepositoryLocalImpl
 
 class DetailsViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData()): ViewModel() {
 
-    private val repositoryImpl: RepositoriesImpl by lazy {
-        RepositoriesImpl()
+    private val repositoryRemoteImpl: RepositoryRemoteImpl by lazy {
+        RepositoryRemoteImpl()
+    }
+
+    private val repositoryLocalImpl: RepositoryLocalImpl by lazy {
+        RepositoryLocalImpl()
     }
 
     fun getLiveData() = liveData
 
     fun getWeatherDTOFromServer(lt:Double, ln:Double) {
-        repositoryImpl.getWeatherFromServer(lt, ln, callback)
+        repositoryRemoteImpl.getWeatherFromServer(lt, ln, callback)
     }
 
     private val callback = object: Callback<WeatherDTO> {
@@ -25,7 +31,7 @@ class DetailsViewModel(private val liveData: MutableLiveData<AppState> = Mutable
             liveData.value = AppState.Loading(50)
             if (response.isSuccessful) {
                 response.body()?.let {
-                     liveData.postValue(AppState.SuccessWeatherDTO(it))
+                    liveData.postValue(AppState.SuccessWeatherDTO(it))
                 }
             }
             else {
@@ -36,5 +42,9 @@ class DetailsViewModel(private val liveData: MutableLiveData<AppState> = Mutable
         override fun onFailure(call: Call<WeatherDTO>, t: Throwable) {
             AppState.Error(t)
         }
+    }
+
+    fun saveCityToDB(weather: Weather, weatherDTO: WeatherDTO) {
+        repositoryLocalImpl.saveHistory(weather, weatherDTO)
     }
 }

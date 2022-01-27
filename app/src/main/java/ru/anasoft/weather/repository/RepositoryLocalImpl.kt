@@ -11,7 +11,7 @@ import ru.anasoft.weather.room.HistoryEntity
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RepositoryLocalImpl(private val localDataSource: HistoryDao) : RepositoryLocal {
+class RepositoryLocalImpl : RepositoryLocal {
 
     override fun getAllHistory(): List<WeatherHistory> {
         return convertHistoryEntityToWeather(App.getHistoryDao().getAllHistory())

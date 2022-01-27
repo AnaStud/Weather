@@ -76,6 +76,7 @@ class DetailsFragment : Fragment() {
                 is AppState.SuccessWeatherDTO -> {
                     loadingLayout.visibility = View.GONE
                     displayWeather(appState.weatherDTO)
+                    viewModel.saveCityToDB(weatherBundle, appState.weatherDTO)
                 }
                 is AppState.Error -> {
                     loadingLayout.visibility = View.GONE

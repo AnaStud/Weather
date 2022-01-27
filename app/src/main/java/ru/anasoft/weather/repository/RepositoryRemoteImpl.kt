@@ -10,7 +10,7 @@ import ru.anasoft.weather.model.getRussianCities
 import ru.anasoft.weather.model.getWorldCities
 import ru.anasoft.weather.utils.REQUEST_SERVER
 
-class RepositoriesImpl: RepositoryListWeather, RepositoryWeather {
+class RepositoryRemoteImpl: RepositoryListWeather, RepositoryWeather {
 
     override fun getListWeatherRus() = getRussianCities()
     override fun getListWeatherWorld() = getWorldCities()
