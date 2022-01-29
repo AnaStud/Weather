@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -12,9 +13,10 @@ import ru.anasoft.weather.R
 import ru.anasoft.weather.databinding.FragmentMainBinding
 import ru.anasoft.weather.model.Weather
 import ru.anasoft.weather.view.details.DetailsFragment
-import ru.anasoft.weather.view.isRussianSavedPreference
 import ru.anasoft.weather.viewmodel.AppState
 import ru.anasoft.weather.viewmodel.MainViewModel
+
+const val IS_RUSSIAN_KEY = "IS_RUSSIAN_KEY"
 
 class MainFragment : Fragment() {
 
@@ -28,7 +30,7 @@ class MainFragment : Fragment() {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
-    private var isRussian = isRussianSavedPreference
+    private var isRussian = true
 
     private val adapter = MainFragmentAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
@@ -45,6 +47,9 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
+        isRussian = requireActivity()
+            .getPreferences(AppCompatActivity.MODE_PRIVATE)
+            .getBoolean(IS_RUSSIAN_KEY, true)
         return binding.root
     }
 
@@ -63,30 +68,32 @@ class MainFragment : Fragment() {
             }
         }
 
-        with(viewModel) {
-            getLiveData().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
+        viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppState> { renderData(it) })
+        createListOfCities()
+    }
+
+    private fun createListOfCities() {
+        with(binding) {
             if (isRussian) {
-                getListWeatherRus()
+                viewModel.getListWeatherRus()
+                mainFragmentButtonChangeLocation.setImageResource(R.drawable.ic_earth)
             }
             else {
-                getListWeatherWorld()
+                viewModel.getListWeatherWorld()
+                mainFragmentButtonChangeLocation.setImageResource(R.drawable.ic_russia)
             }
-
         }
     }
 
     private fun sendRequest() {
-        with(binding) {
-            if (isRussian) {
-                viewModel.getListWeatherWorld()
-                mainFragmentButtonChangeLocation.setImageResource(R.drawable.ic_russia)
-            } else {
-                viewModel.getListWeatherRus()
-                mainFragmentButtonChangeLocation.setImageResource(R.drawable.ic_earth)
-            }
-        }
         isRussian = !isRussian
-        isRussianSavedPreference = isRussian
+        createListOfCities()
+
+        requireActivity()
+            .getPreferences(AppCompatActivity.MODE_PRIVATE).edit()
+            .putBoolean(IS_RUSSIAN_KEY, isRussian)
+            .apply()
+
     }
 
     private fun renderData(appState:AppState) {
