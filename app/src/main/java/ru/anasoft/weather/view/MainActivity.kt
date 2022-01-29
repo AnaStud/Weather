@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import ru.anasoft.weather.R
 import ru.anasoft.weather.databinding.ActivityMainBinding
+import ru.anasoft.weather.view.contacts.ContactsFragment
 import ru.anasoft.weather.view.history.HistoryFragment
 import ru.anasoft.weather.view.main.MainFragment
 
@@ -58,6 +59,19 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.apply {
                         beginTransaction()
                             .replace(R.id.container, HistoryFragment.newInstance(), "HISTORY")
+                            .addToBackStack("")
+                            .commitAllowingStateLoss()
+                    }
+                }
+                true
+            }
+            R.id.menu_contacts -> {
+
+                val fragmentContacts = supportFragmentManager.findFragmentByTag("CONTACTS")
+                if (fragmentContacts==null) {
+                    supportFragmentManager.apply {
+                        beginTransaction()
+                            .replace(R.id.container, ContactsFragment.newInstance(), "CONTACTS")
                             .addToBackStack("")
                             .commitAllowingStateLoss()
                     }

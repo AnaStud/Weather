@@ -5,4 +5,9 @@
     <string name="feels_name">Ощущается</string>
     <string name="location">Location</string>
     <string name="history">History</string>
+    <string name="contacts">Contacts</string>
+    <string name="RationaleTitle">Доступ к контактам</string>
+    <string name="RationaleText">Приложению необходим доступ к контактам для Вашего удобства. Мы не собираем и не пересылаем Ваши личные данные.</string>
+    <string name="RationaleYes">Разрешаю</string>
+    <string name="RationaleNo">Не нужно</string>
 </resources>
