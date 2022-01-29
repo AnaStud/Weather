@@ -52,11 +52,15 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_history -> {
-                supportFragmentManager.apply {
-                    beginTransaction()
-                        .add(R.id.container, HistoryFragment.newInstance())
-                        .addToBackStack("")
-                        .commitAllowingStateLoss()
+
+                val fragmentHistory = supportFragmentManager.findFragmentByTag("HISTORY")
+                if (fragmentHistory==null) {
+                    supportFragmentManager.apply {
+                        beginTransaction()
+                            .replace(R.id.container, HistoryFragment.newInstance(), "HISTORY")
+                            .addToBackStack("")
+                            .commitAllowingStateLoss()
+                    }
                 }
                 true
             }
