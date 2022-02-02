@@ -10,4 +10,10 @@
     <string name="RationaleText">Приложению необходим доступ к контактам для Вашего удобства. Мы не собираем и не пересылаем Ваши личные данные.</string>
     <string name="RationaleYes">Разрешаю</string>
     <string name="RationaleNo">Не нужно</string>
+    <string name="RationaleTitleLocation">Доступ к геолокации</string>
+    <string name="RationaleTextLocation">Приложению необходим доступ к геолокации для Вашего удобства. Мы не собираем и не пересылаем Ваши личные данные.</string>
+    <string name="dialog_address_title">Ваш адрес</string>
+    <string name="dialog_address_get_weather">Узнать погоду</string>
+    <string name="dialog_button_close">Закрыть</string>
+
 </resources>
