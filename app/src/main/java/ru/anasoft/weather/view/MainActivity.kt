@@ -12,6 +12,7 @@ import ru.anasoft.weather.databinding.ActivityMainBinding
 import ru.anasoft.weather.view.contacts.ContactsFragment
 import ru.anasoft.weather.view.history.HistoryFragment
 import ru.anasoft.weather.view.main.MainFragment
+import ru.anasoft.weather.view.map.MapsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -72,6 +73,19 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.apply {
                         beginTransaction()
                             .replace(R.id.container, ContactsFragment.newInstance(), "CONTACTS")
+                            .addToBackStack("")
+                            .commitAllowingStateLoss()
+                    }
+                }
+                true
+            }
+            R.id.menu_google_maps -> {
+
+                val fragmentGMap = supportFragmentManager.findFragmentByTag("GMAP")
+                if (fragmentGMap==null) {
+                    supportFragmentManager.apply {
+                        beginTransaction()
+                            .replace(R.id.container, MapsFragment(), "GMAP")
                             .addToBackStack("")
                             .commitAllowingStateLoss()
                     }

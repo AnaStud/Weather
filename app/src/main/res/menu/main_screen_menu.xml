@@ -9,5 +9,10 @@
     <item
         android:id="@+id/menu_history"
         android:title="@string/history"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_google_maps"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="@string/google_maps"
         app:showAsAction="always" />
 </menu>
