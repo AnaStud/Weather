@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "821602913748",
+    "project_id": "weather-4fc43",
+    "storage_bucket": "weather-4fc43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821602913748:android:0ba8aa49eb0fd669ca9a41",
+        "android_client_info": {
+          "package_name": "ru.anasoft.weather"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "821602913748-ccgqv9s3ljr1sdak7vgsk21jfb6o474m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgRi_-ABMoUTi5LvFoGZEAWtSLyX0bpmQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "821602913748-ccgqv9s3ljr1sdak7vgsk21jfb6o474m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

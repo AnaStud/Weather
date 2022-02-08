@@ -89,10 +89,13 @@ class MapsFragment : Fragment() {
         Thread {
             val geocoder = Geocoder(requireContext())
             val listAddress = geocoder.getFromLocationName(binding.searchAddress.text.toString(),1)
-            val myLocation = LatLng(listAddress[0].latitude,listAddress[0].longitude)
-            requireActivity().runOnUiThread {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation,10f))
-                map.addMarker(MarkerOptions().position(myLocation).title(""))
+
+            if (listAddress.size > 0) {
+                val myLocation = LatLng(listAddress[0].latitude,listAddress[0].longitude)
+                requireActivity().runOnUiThread {
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation,10f))
+                    map.addMarker(MarkerOptions().position(myLocation).title(""))
+                }
             }
         }.start()
     }
